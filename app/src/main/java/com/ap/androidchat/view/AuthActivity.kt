@@ -2,11 +2,9 @@ package com.ap.androidchat.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ToggleButton
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Observer
 import com.ap.androidchat.R
-import com.ap.androidchat.view.ChatsActivity
 import com.ap.androidchat.viewmodel.AuthViewModel
 
 class AuthActivity : ComponentActivity() {
@@ -44,20 +40,26 @@ class AuthActivity : ComponentActivity() {
         })
 
         setContent {
-            LoginScreen() { email, password, isLogin ->
+            LoginScreen() { email, password, name, picture, isLogin ->
                 println(email + "\n" +  password)
-                viewModel.auth(email = email, password = password, isLogin = isLogin)
+                viewModel.auth(email = email, password = password, isLogin = isLogin, name = name, profilepic = picture)
             }
         }
     }
 }
 
 @Composable
-fun LoginScreen(auth:(email: String, password: String, isLogin:Boolean) -> Unit) {
+fun LoginScreen(auth:(email: String, password: String, name:String, picture: String, isLogin:Boolean) -> Unit) {
     val email = remember {
         mutableStateOf("")
     }
     val password = remember {
+        mutableStateOf("")
+    }
+    val name = remember {
+        mutableStateOf("")
+    }
+    val picture = remember {
         mutableStateOf("")
     }
     val isLogin = remember {
@@ -71,7 +73,7 @@ fun LoginScreen(auth:(email: String, password: String, isLogin:Boolean) -> Unit)
             verticalArrangement = Arrangement.Top
         )
         {
-            Image(painter = painterResource(id = R.drawable.social), contentDescription = "image")
+            Image(painter = painterResource(id = R.drawable.social), contentDescription = "image", Modifier.padding(top = 40.dp))
             Card(
                 Modifier
                     .fillMaxHeight()
@@ -97,22 +99,32 @@ fun LoginScreen(auth:(email: String, password: String, isLogin:Boolean) -> Unit)
                           isLogin.value = it
                       })
                   }
-                    Spacer(modifier = Modifier.weight(1f))
+
                     Column(
                         Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
+                        verticalArrangement = Arrangement.Top
                     ) {
                         EmailText(
                             value = email.value){  newValue ->
                             email.value = newValue
                         }
-                        Spacer(modifier = Modifier.height(16.dp))
+
                         PasswordText(value = password.value){ newValue ->
                             password.value = newValue
                         }
+
+                        if (!isLogin.value) {
+                            NameField(value = name.value, changed = {
+                                name.value = it
+                            })
+
+                            PicField(value = picture.value, changed =  {
+                                picture.value = it
+                            })
+                        }
                         Spacer(modifier = Modifier.height(16.dp))
-                        Button(onClick = { auth(email.value, password.value, isLogin.value)}) {
+                        Button(onClick = { auth(email.value, password.value, name.value, picture.value, isLogin.value)}) {
                             if(isLogin.value){
                                 Text("Iniciar sesión")
                             }else{
@@ -151,10 +163,33 @@ fun PasswordText(value: String, changed: (String) -> Unit) {
     )
 }
 
+@Composable
+fun NameField(value: String, changed: (String) -> Unit) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = changed,
+        label = { Text("Name") },
+        placeholder = { Text(text = "Escribe tu nombre")},
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+fun PicField(value: String, changed: (String) -> Unit) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = changed,
+        label = { Text("Profile Pic") },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewAuthActivity() {
-    LoginScreen { email, password, isLogin ->
+    LoginScreen { email, password, isLogin, name, picture ->
 
     }
 }
