@@ -42,7 +42,7 @@ class AuthActivity : ComponentActivity() {
         setContent {
             LoginScreen() { email, password, name, picture, isLogin ->
                 println(email + "\n" +  password)
-                viewModel.auth(email = email, password = password, isLogin = isLogin, name = name, profilepic = picture)
+                viewModel.auth(email = email, password = password, isLogin = isLogin, name = name, profilePic = picture)
             }
         }
     }
@@ -68,12 +68,16 @@ fun LoginScreen(auth:(email: String, password: String, name:String, picture: Str
 
     Scaffold(backgroundColor = colorResource(id = R.color.secondaryDarkColor)) {
         Column(
-            Modifier.fillMaxSize(),
+            Modifier
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
-        )
-        {
-            Image(painter = painterResource(id = R.drawable.social), contentDescription = "image", Modifier.padding(top = 40.dp))
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.social),
+                contentDescription = "image",
+                Modifier
+                    .padding(top = 50.dp))
             Card(
                 Modifier
                     .fillMaxHeight()
@@ -87,21 +91,27 @@ fun LoginScreen(auth:(email: String, password: String, name:String, picture: Str
                         .padding(40.dp)
                         .height(120.dp)
                 ) {
-
                   Row() {
                       if (isLogin.value) {
-                          Text(text = "Login", fontWeight = FontWeight.Medium, fontSize = 32.sp)
+                          Text(
+                              text = "Login",
+                              fontWeight = FontWeight.Medium,
+                              fontSize = 32.sp)
                       } else {
-                          Text(text = "Register", fontWeight = FontWeight.Medium, fontSize = 32.sp)
+                          Text(
+                              text = "Register",
+                              fontWeight = FontWeight.Medium,
+                              fontSize = 32.sp)
                       }
                       Spacer(modifier = Modifier.width(64.dp))
                       Switch(checked = isLogin.value, onCheckedChange = {
                           isLogin.value = it
                       })
                   }
-
                     Column(
-                        Modifier.fillMaxSize(),
+                        Modifier
+                            .fillMaxSize()
+                            .padding(top = 60.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Top
                     ) {
@@ -124,7 +134,10 @@ fun LoginScreen(auth:(email: String, password: String, name:String, picture: Str
                             })
                         }
                         Spacer(modifier = Modifier.height(16.dp))
-                        Button(onClick = { auth(email.value, password.value, name.value, picture.value, isLogin.value)}) {
+                        Button(onClick = {
+                            auth(email.value, password.value, name.value, picture.value, isLogin.value)
+                        })
+                        {
                             if(isLogin.value){
                                 Text("Iniciar sesión")
                             }else{
@@ -137,7 +150,6 @@ fun LoginScreen(auth:(email: String, password: String, name:String, picture: Str
         }
     }
 }
-
 
 @Composable
 fun EmailText(value: String, changed: (String) -> Unit) {
@@ -189,7 +201,5 @@ fun PicField(value: String, changed: (String) -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewAuthActivity() {
-    LoginScreen { email, password, isLogin, name, picture ->
-
-    }
+    LoginScreen { email, password, isLogin, name, picture -> }
 }

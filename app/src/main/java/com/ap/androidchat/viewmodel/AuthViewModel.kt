@@ -29,9 +29,15 @@ class AuthViewModel:ViewModel() {
 
     fun auth(email:String,password:String,isLogin:Boolean, name: String, profilePic: String){
         if(isLogin){
-            login(email = email, password = password)
+            login(
+                email = email,
+                password = password)
         }else{
-            register(email = email, password = password, name = name, profilepic = profilePic)
+            register(
+                email = email,
+                password = password,
+                name = name,
+                profilepic = profilePic)
         }
     }
 
@@ -65,7 +71,7 @@ class AuthViewModel:ViewModel() {
 
                 }else{
                     Log.d("AUTH","Fallo al registrar usuario: ",result.exception)
-                    message = ""
+                    message = "No"
                     isError = true
                 }
             }

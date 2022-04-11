@@ -15,7 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Observer
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -31,6 +34,7 @@ class ChatsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val viewModel = HomeViewModel()
+        viewModel.chatListener
 
         viewModel.isLoggedIn.observe(this, Observer {
             if(!it){
@@ -50,7 +54,8 @@ class ChatsActivity : AppCompatActivity() {
                         paddingValues = paddingValues
                 ) {
                         viewModel.logout()
-                    }})
+                    }
+                })
             }
         }
     }
@@ -62,15 +67,20 @@ fun ChatsActivityContent(logout:()->Unit){
 }
 
 
+// Screen Components
+
 @Composable
 fun HomeScreen() {
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(Color.White),
-    horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        .background(Color.White)
+        .padding(40.dp),
+    horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.Top
     ) {
-        Text(text = "Home", color = Color.Black)
+        Text(text = "Home", color = Color.Black,
+            style = TextStyle(fontSize = 32.sp,
+                fontWeight = FontWeight.Bold))
     }    
 }
 
@@ -78,11 +88,14 @@ fun HomeScreen() {
 fun ChatsScreen() {
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(Color.White),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        .background(Color.White)
+        .padding(40.dp),
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.Top
     ) {
-        Text(text = "Chats", color = Color.Black)
+        Text(text = "Chats", color = Color.Black,
+            style = TextStyle(fontSize = 32.sp,
+                fontWeight = FontWeight.Bold))
     }
 }
 
