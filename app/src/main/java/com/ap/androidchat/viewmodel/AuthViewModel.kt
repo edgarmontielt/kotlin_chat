@@ -18,8 +18,9 @@ class AuthViewModel:ViewModel() {
     val isLoggedIn: LiveData<Boolean>
     get() = _isLoggedIn
     private var message = ""
-    private var isError = false
+    var isError = false
     private var database: DatabaseReference = Firebase.database.reference
+
 
     init{
         if (currentUser!=null){

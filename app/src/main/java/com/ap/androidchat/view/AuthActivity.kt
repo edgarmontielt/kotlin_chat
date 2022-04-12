@@ -1,7 +1,10 @@
 package com.ap.androidchat.view
 
+import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -14,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -22,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ap.androidchat.R
 import com.ap.androidchat.viewmodel.AuthViewModel
 
@@ -30,6 +35,7 @@ class AuthActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val viewModel = AuthViewModel()
+
 
         viewModel.isLoggedIn.observe(this, Observer {
             if(it){
@@ -41,7 +47,6 @@ class AuthActivity : ComponentActivity() {
 
         setContent {
             LoginScreen() { email, password, name, picture, isLogin ->
-                println(email + "\n" +  password)
                 viewModel.auth(email = email, password = password, isLogin = isLogin, name = name, profilePic = picture)
             }
         }
@@ -65,6 +70,8 @@ fun LoginScreen(auth:(email: String, password: String, name:String, picture: Str
     val isLogin = remember {
         mutableStateOf(true)
     }
+    val context = LocalContext.current
+    val viewModel = AuthViewModel()
 
     Scaffold(backgroundColor = colorResource(id = R.color.secondaryDarkColor)) {
         Column(
@@ -136,6 +143,7 @@ fun LoginScreen(auth:(email: String, password: String, name:String, picture: Str
                         Spacer(modifier = Modifier.height(16.dp))
                         Button(onClick = {
                             auth(email.value, password.value, name.value, picture.value, isLogin.value)
+                            showToastMessage(context,"Session iniciada correctamente")
                         })
                         {
                             if(isLogin.value){
@@ -196,6 +204,10 @@ fun PicField(value: String, changed: (String) -> Unit) {
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         modifier = Modifier.fillMaxWidth()
     )
+}
+
+private fun showToastMessage(context: Context, message:String){
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
 @Preview(showBackground = true)
